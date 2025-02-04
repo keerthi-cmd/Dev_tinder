@@ -1,18 +1,18 @@
 import React, { useState } from "react";
-
+import axios from "axios";
 const Login = () => {
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
-    // try {
-    //   const res = await axios.post("http://localhost:7777/login", {
-    //     emailId,
-    //     password,
-    //   });
-    // } catch (err) {
-    //   console.error(err);
-    // }
+    try {
+      const res = await axios.post("http://localhost:7777/login", {
+        emailId,
+        password,
+      });
+    } catch (err) {
+      console.error(err);
+    }
   };
   return (
     <div className="flex justify-center my-10">
