@@ -1,17 +1,30 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
+import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../utils/constants";
 const Login = () => {
-  const [emailId, setEmailId] = useState("");
-  const [password, setPassword] = useState("");
-
+  const [emailId, setEmailId] = useState("Keerthi123@gmail.com");
+  const [password, setPassword] = useState("ajll123A$imt");
+  const [error, setError] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleLogin = async () => {
     try {
-      const res = await axios.post("http://localhost:7777/login", {
-        emailId,
-        password,
-      });
+      const res = await axios.post(
+        BASE_URL + "/login",
+        {
+          emailId,
+          password,
+        },
+        { withCredentials: true }
+      );
+      dispatch(addUser(res.data));
+      navigate("/");
     } catch (err) {
       console.error(err);
+      setError(err?.response?.data || "Something went wrong");
     }
   };
   return (
@@ -26,6 +39,7 @@ const Login = () => {
               </div>
               <input
                 type="text"
+                value={emailId}
                 placeholder="Type here"
                 className="input input-bordered w-full max-w-xs"
                 onChange={(e) => setEmailId(e.target.value)}
@@ -37,12 +51,14 @@ const Login = () => {
               </div>
               <input
                 type="text"
+                value={password}
                 placeholder="Type here"
                 className="input input-bordered w-full max-w-xs"
                 onChange={(e) => setPassword(e.target.value)}
               />
             </label>
           </div>
+          <p className="text-red-500">{error}</p>
           <div className="card-actions justify-center">
             <button className="btn btn-primary" onClick={handleLogin}>
               Login
